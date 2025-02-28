@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self' https://*.gstatic.com https://*.googleapis.com https://*.firebaseio.com https://*.firebase.com;
+                 script-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.googleapis.com https://*.firebaseio.com https://*.firebase.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+                 style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+                 img-src 'self' data: https:;
+                 font-src 'self' https://cdnjs.cloudflare.com;
+                 connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://*.firebase.com;">
+    <title>Saro Stok Yönetim Sistemi</title>
+    <link href="../dist/output.css" rel="stylesheet">
+    <link href="styles/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        .settings-tab {
+            @apply px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap pb-3 border-b-2 border-transparent;
+        }
+        .active-tab {
+            @apply text-indigo-600 border-indigo-600;
+        }
+        .tab-content {
+            @apply transition-all duration-300 ease-in-out;
+        }
+        /* Dark mode için stil tanımlamaları */
+        .dark {
+            color-scheme: dark;
+        }
+        
+        .dark body {
+            background-color: #111827 !important;
+            color: #fff;
+        }
+        
+        .dark .bg-white {
+            background-color: #1F2937 !important;
+        }
+        
+        .dark .bg-gray-100 {
+            background-color: #111827 !important;
+        }
+        
+        .dark .bg-gray-50 {
+            background-color: #374151 !important;
+        }
+
+        .dark .text-gray-900 {
+            color: #fff !important;
+        }
+        
+        .dark .text-gray-800 {
+            color: #E5E7EB !important;
+        }
+        
+        .dark .text-gray-700 {
+            color: #D1D5DB !important;
+        }
+        
+        .dark .text-gray-600 {
+            color: #9CA3AF !important;
+        }
+        
+        .dark .text-gray-500 {
+            color: #6B7280 !important;
+        }
+
+        .dark .border-gray-200 {
+            border-color: #374151 !important;
+        }
+        
+        .dark .border-gray-300 {
+            border-color: #4B5563 !important;
+        }
+
+        /* Sidebar dark mode */
+        .dark #sidebar {
+            background-color: #1F2937 !important;
+        }
+
+        .dark .hover\:bg-gray-50:hover {
+            background-color: #374151 !important;
+        }
+
+        /* Input ve select dark mode */
+        .dark input,
+        .dark select,
+        .dark textarea {
+            background-color: #374151 !important;
+            border-color: #4B5563 !important;
+            color: #fff !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: #9CA3AF !important;
+        }
+
+        /* Tablo dark mode */
+        .dark table thead {
+            background-color: #1F2937 !important;
+        }
+
+        .dark table tbody tr:hover {
+            background-color: #374151 !important;
+        }
+
+        .dark table td,
+        .dark table th {
+            border-color: #4B5563 !important;
+        }
+
+        /* Modal dark mode */
+        .dark .bg-gray-600 {
+            background-color: rgba(0, 0, 0, 0.75) !important;
+        }
+
+        /* Button dark mode */
+        .dark .bg-gray-100 {
+            background-color: #374151 !important;
+        }
+
+        .dark .hover\:bg-gray-200:hover {
+            background-color: #4B5563 !important;
+        }
+
+        /* Card dark mode */
+        .dark .shadow {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        }
+        
+        /* Animasyonları devre dışı bırakma */
+        .no-animations * {
+            transition: none !important;
+            animation: none !important;
+        }
+        
+        /* Üst menü stili */
+        .top-menu {
+            @apply w-full h-auto transform translate-x-0 static flex-row justify-between py-4;
+        }
+        
+        .top-menu-content {
+            @apply ml-0 mt-16;
+        }
+
+        /* Modern Koyu Tema (Dark Theme 2) */
+        .dark-modern {
+            color-scheme: dark;
+        }
+        
+        .dark-modern body {
+            background-color: #0A0A0F !important;
+            color: #E2E8F0;
+        }
+        
+        .dark-modern #sidebar {
+            background-color: #13131A !important;
+            border-right: 1px solid #2D2D3A;
+        }
+        
+        .dark-modern .bg-white {
+            background-color: #13131A !important;
+        }
+        
+        .dark-modern .bg-gray-100 {
+            background-color: #0A0A0F !important;
+        }
+        
+        .dark-modern .bg-gray-50 {
+            background-color: #1C1C24 !important;
+        }
+        
+        .dark-modern .text-gray-900 {
+            color: #E2E8F0 !important;
+        }
+        
+        .dark-modern .text-gray-800 {
+            color: #CBD5E1 !important;
+        }
+        
+        .dark-modern .text-gray-700 {
+            color: #94A3B8 !important;
+        }
+        
+        .dark-modern .text-gray-600 {
+            color: #64748B !important;
+        }
+        
+        .dark-modern .text-gray-500 {
+            color: #475569 !important;
+        }
+        
+        .dark-modern .border-gray-200 {
+            border-color: #2D2D3A !important;
+        }
+        
+        .dark-modern .border-gray-300 {
+            border-color: #3F3F4E !important;
+        }
+        
+        .dark-modern input,
+        .dark-modern select,
+        .dark-modern textarea {
+            background-color: #1C1C24 !important;
+            border-color: #2D2D3A !important;
+            color: #E2E8F0 !important;
+        }
+        
+        .dark-modern input::placeholder,
+        .dark-modern textarea::placeholder {
+            color: #64748B !important;
+        }
+        
+        .dark-modern table thead {
+            background-color: #13131A !important;
+        }
+        
+        .dark-modern table tbody tr:hover {
+            background-color: #1C1C24 !important;
+        }
+        
+        .dark-modern table td,
+        .dark-modern table th {
+            border-color: #2D2D3A !important;
+        }
+        
+        .dark-modern .shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        .dark-modern .hover\:bg-gray-50:hover {
+            background-color: #1C1C24 !important;
+        }
+        
+        /* Özel vurgular ve aksan renkleri */
+        .dark-modern .bg-indigo-600 {
+            background-color: #6366F1 !important;
+        }
+        
+        .dark-modern .hover\:bg-indigo-700:hover {
+            background-color: #4F46E5 !important;
+        }
+        
+        .dark-modern .text-indigo-600 {
+            color: #818CF8 !important;
+        }
+
+        /* Şifre alanı için sallama animasyonu */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .shake-animation {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Şifre alanı için hover ve focus stilleri */
+        #password:hover,
+        #password:focus {
+            border-color: rgba(99, 102, 241, 0.5);
+            pointer-events: all !important;
+        }
+
+        /* Giriş formu container'ı */
+        .login-container {
+            position: relative;
+            z-index: 10002;
+            pointer-events: all !important;
+        }
+
+        /* Splash screen ve giriş formu için z-index ve pointer-events ayarları */
+        #splashScreen {
+            z-index: 9999;
+            pointer-events: all !important;
+        }
+
+        #loginForm {
+            z-index: 10000;
+            pointer-events: all !important;
+        }
+
+        #password {
+            position: relative;
+            z-index: 10001;
+            pointer-events: all !important;
+            cursor: text !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+
+        /* Alert dialog'un z-index'ini düşür */
+        .alert-dialog {
+            z-index: 9998 !important;
+        }
+
+        /* Bildirim mesajları için ortak stiller */
+        .notification-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10005;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(150%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .notification-message.show {
+            transform: translateX(0);
+        }
+
+        .notification-message i {
+            font-size: 1.25rem;
+        }
+
+        /* Hata mesajı */
+        .error-message {
+            background-color: #DC2626;
+        }
+
+        .dark .error-message,
+        .dark-modern .error-message {
+            background-color: #991B1B;
+        }
+
+        /* Başarı mesajı */
+        .success-message {
+            background-color: #059669;
+        }
+
+        .dark .success-message,
+        .dark-modern .success-message {
+            background-color: #065F46;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Önce Splash Screen -->
+    <div id="splashScreen" class="fixed inset-0 bg-indigo-900 z-[100] flex flex-col items-center justify-center transition-all duration-500">
+        <div class="w-full max-w-md p-8 space-y-8 text-center">
+            <!-- Logo ve Başlık -->
+            <div class="space-y-4">
+                <div class="animate-bounce">
+                    <i class="fas fa-boxes text-white text-6xl"></i>
+                </div>
+                <h1 class="text-4xl font-bold text-white">Saro Stok</h1>
+                <p class="text-indigo-200">Stok Yönetim Sistemi</p>
+            </div>
+
+            <!-- Giriş Formu -->
+            <div id="loginForm" class="mt-8 space-y-6 opacity-0 transition-all duration-500">
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="password" id="password" 
+                            class="w-full px-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="Şifre"
+                            autocomplete="off"
+                            tabindex="1">
+                    </div>
+                    <button id="loginBtn" 
+                        class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center justify-center space-x-2"
+                        tabindex="2">
+                        <span>Giriş Yap</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Yükleme Göstergesi -->
+            <div id="loadingIndicator" class="hidden space-y-4">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-full max-w-xs bg-indigo-800/50 rounded-full h-2 overflow-hidden">
+                        <div id="progressBar" class="h-full bg-indigo-500 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p id="loadingText" class="text-indigo-200 text-sm">Veriler yükleniyor...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ana Uygulama İçeriği -->
+    <div id="mainContent" class="hidden">
+        <div class="flex h-screen">
+            <!-- Sidebar Toggle Button -->
+            <button id="sidebarToggle" class="fixed top-4 left-4 z-50 p-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Sidebar -->
+            <div id="sidebar" class="bg-indigo-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-full transition-all duration-300 ease-in-out z-30">
+                <div class="flex items-center justify-between px-4">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-extrabold logo-full">Saro Stok</span>
+                        <span class="text-2xl font-extrabold logo-mini hidden">SS</span>
+                    </div>
+                </div>
+                
+                <nav class="space-y-2">
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="dashboard" data-title="Dashboard">
+                        <i class="fas fa-home menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Dashboard</span>
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="categories" data-title="Kategoriler">
+                        <i class="fas fa-tags menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Kategoriler</span>
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="products" data-title="Ürünler">
+                        <i class="fas fa-box menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Ürünler</span>
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="customers" data-title="Müşteriler">
+                        <i class="fas fa-users menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Müşteriler</span>
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="suppliers" data-title="Tedarikçiler">
+                        <i class="fas fa-truck menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Tedarikçiler</span>
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="quotes" data-title="Fiyat Teklifleri">
+                        <i class="fas fa-file-invoice-dollar menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Fiyat Teklifleri</span>
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="finance" data-title="Gelir/Gider">
+                        <i class="fas fa-money-bill-wave menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Gelir/Gider</span>
+                    </a>
+                    <div class="border-t border-indigo-700 my-4"></div>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-indigo-700 hover:text-white flex items-center" data-page="settings" data-title="Ayarlar">
+                        <i class="fas fa-cog menu-icon w-6 text-center"></i>
+                        <span class="menu-text ml-2">Ayarlar</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Ana İçerik -->
+            <div class="flex-1 flex flex-col transition-all duration-300 ease-in-out">
+                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 transition-all duration-300 ease-in-out">
+                    <div id="content" class="container mx-auto px-6 py-8">
+                        <!-- Sayfa içeriği buraya dinamik olarak yüklenecek -->
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Modallar -->
+        <div id="previewQuoteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-[60]"></div>
+        <div id="transactionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-[60]">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <h3 class="text-xl font-semibold text-gray-900" id="modalTitle">Yeni İşlem</h3>
+                        <button id="closeTransactionModal" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">İşlem Tipi</label>
+                            <select id="transactionType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <option value="income">Gelir</option>
+                                <option value="expense">Gider</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                            <select id="transactionCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <!-- Kategoriler dinamik olarak yüklenecek -->
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tutar</label>
+                            <input type="number" id="transactionAmount" step="0.01" min="0"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tarih</label>
+                            <input type="date" id="transactionDate"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Açıklama</label>
+                            <textarea id="transactionDescription" rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-3">
+                        <button id="cancelTransactionBtn" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition duration-200">
+                            İptal
+                        </button>
+                        <button id="saveTransactionBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200">
+                            Kaydet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase script'ini en başa al -->
+    <script type="module" src="js/firebase.js"></script>
+
+    <!-- Chart.js kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <!-- Diğer script'leri defer ile yükle -->
+    <script defer src="js/splashRouter.js"></script>
+    <script defer src="js/sidebar.js"></script>
+    <script type="module" src="js/router.js"></script>
+
+    <!-- Sipariş Önizleme Modalı -->
+    <div id="orderPreviewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-[60]">
+        <div class="relative mx-auto p-4 sm:p-5 w-full max-w-[95%] md:max-w-[80%] lg:max-w-[700px] my-6">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <h3 class="text-xl font-semibold text-gray-900">Sipariş Detayları</h3>
+                        <button id="closeOrderPreviewModal" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Sipariş Bilgileri -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Sipariş No</label>
+                            <p id="previewOrderId" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tarih</label>
+                            <p id="previewOrderDate" class="mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Durum</label>
+                            <p id="previewOrderStatus" class="mt-1"></p>
+                        </div>
+                    </div>
+
+                    <!-- Sipariş Ürünleri -->
+                    <div class="mt-4">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="px-4 py-2 text-left">Ürün</th>
+                                    <th class="px-4 py-2 text-right">Miktar</th>
+                                    <th class="px-4 py-2 text-right">Birim Fiyat</th>
+                                    <th class="px-4 py-2 text-right">Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewOrderItems">
+                                <!-- Ürünler buraya dinamik olarak eklenecek -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-t font-semibold">
+                                    <td colspan="3" class="px-4 py-2 text-right">Genel Toplam:</td>
+                                    <td id="previewOrderTotal" class="px-4 py-2 text-right"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-end pt-3">
+                        <button id="closePreviewBtn" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition duration-200">
+                            Kapat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPDF'i global olarak tanımlayalım -->
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+    </script>
+</body>
+</html> 
