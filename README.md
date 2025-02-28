@@ -87,14 +87,8 @@ Projenizde Firebase'i kullanmak için aşağıdaki adımları izleyin:
 
 ### 🔍 Kullanılan İndeksler
 Firebase Console'da aşağıdaki indeksler eklenmiştir:
-- **supplier_orders** koleksiyonu için:
-  - `supplierid` (Artan)
-  - `createdAt` (Azalan)
-  - `__name__` (Azalan)
-- **products** koleksiyonu için:
-  - `categoryid` (Artan)
-  - `name` (Artan)
-  - `__name__` (Artan)
+
+![İndeksler](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/10.png)
 
 ### 🔒 Güvenlik Kuralları
 Firebase Firestore için güvenlik kurallarını ayarlamak için:
@@ -127,22 +121,32 @@ Uygulamanızı paketlemek ve çalıştırmak için:
 
 Aşağıda uygulamanın farklı bölümlerine ait ekran görüntüleri bulunmaktadır:
 
-### Ana Sayfa
-![Ana Sayfa](link-to-your-screenshot)
+### Giriş Ekranı
+![Giriş Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/1.png)
 
-### Ürün Yönetimi
-![Ürün Yönetimi](link-to-your-screenshot)
+### Dashboard Ekranı
+![Giriş Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/2.png)
 
-### Müşteri Yönetimi
-![Müşteri Yönetimi](link-to-your-screenshot)
+### Kategoriler Ekranı
+![Kategoriler Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/3.gif)
 
-### Finans Yönetimi
-![Finans Yönetimi](link-to-your-screenshot)
+### Ürünler Ekranı
+![Ürünler Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/4.gif)
 
-### Ayarlar
-![Ayarlar](link-to-your-screenshot)
+### Müşteriler Ekranı
+![Müşteriler Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/5.gif)
 
-Lütfen ekran görüntülerini uygun bağlantılarla güncelleyiniz. 
+### Tedarikçi Ekranı
+![Tedarikçi Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/6.gif)
+
+### Teklfiler Ekranı
+![Teklifler Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/7.gif)
+
+### Gelir/Gifer Ekranı
+![Gelir/Gider Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/8.gif)
+
+### Ayarlar Ekranı
+![Gelir/Gider Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/9.gif)
 
 
 
