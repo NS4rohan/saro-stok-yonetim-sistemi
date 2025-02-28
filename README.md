@@ -142,7 +142,7 @@ Aşağıda uygulamanın farklı bölümlerine ait ekran görüntüleri bulunmakt
 ### Teklifler Ekranı
 ![Teklifler Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/7.gif)
 
-### Gelir/Gifer Ekranı
+### Gelir/Gicer Ekranı
 ![Gelir/Gider Ekranı](https://github.com/NS4rohan/saro-stok-yonetim-sistemi/blob/main/screenshot/8.gif)
 
 ### Ayarlar Ekranı
